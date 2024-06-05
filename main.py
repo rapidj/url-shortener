@@ -59,8 +59,8 @@ def shorten_link(token, link):
 
 def main():
     load_dotenv()
-    service_token = os.environ['SERVICE_TOKEN']
-    link = input('Введите ссылку? ')
+    service_token = os.environ['VK_SERVICE_TOKEN']
+    link = input('Please input the link: ')
     # url = 'https://dvmn.org/modules/web-api/lesson/vk-short-link/'
     short_link = ''
     clicks_cnt = 0
@@ -82,7 +82,7 @@ def main():
         print('Short link: ', short_link)
 
     if clicks_cnt:
-        print('The total number of clicks:', clicks_cnt)
+        print('The total number of clicks: ', clicks_cnt)
 
 
 if __name__ == '__main__':
