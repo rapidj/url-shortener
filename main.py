@@ -13,14 +13,14 @@ def is_shorten_link(token, link):
     url = 'https://api.vk.ru/method/utils.checkLink'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    response_json = response.json()
-    if response_json.get('response'):
-        if link == response_json.get('response').get('link'):
+    api_data = response.json()
+    if api_data.get('response'):
+        if link == api_data.get('response').get('link'):
             return '', False
         else:
             return '', True
-    if response_json.get('error'):
-        return response_json.get('error').get('error_msg'), True
+    if api_data.get('error'):
+        return api_data.get('error').get('error_msg'), True
 
 
 def count_clicks(token, link):
@@ -36,11 +36,11 @@ def count_clicks(token, link):
     url = 'https://api.vk.ru/method/utils.getLinkStats'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    response_json = response.json()
-    if response_json.get('response'):
-        return '', response_json.get('response').get('stats')[0].get('views')
-    elif response_json.get('error'):
-        return response_json.get('error').get('error_msg'), 0
+    api_data = response.json()
+    if api_data.get('response'):
+        return '', api_data.get('response').get('stats')[0].get('views')
+    elif api_data.get('error'):
+        return api_data.get('error').get('error_msg'), 0
 
 
 def shorten_link(token, link):
@@ -53,11 +53,11 @@ def shorten_link(token, link):
     url = 'https://api.vk.ru/method/utils.getShortLink'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    response_json = response.json()
-    if response_json.get('response'):
-        return '', response_json.get('response').get('short_url')
-    elif response_json.get('error'):
-        return response_json.get('error').get('error_msg'), ''
+    api_data = response.json()
+    if api_data.get('response'):
+        return '', api_data.get('response').get('short_url')
+    elif api_data.get('error'):
+        return api_data.get('error').get('error_msg'), ''
 
 
 def main():
