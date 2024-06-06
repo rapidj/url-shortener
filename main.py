@@ -13,13 +13,14 @@ def is_shorten_link(token, link):
     url = 'https://api.vk.ru/method/utils.checkLink'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    if response.json().get('response'):
-        if link == response.json().get('response').get('link'):
+    response_json = response.json()
+    if response_json.get('response'):
+        if link == response_json.get('response').get('link'):
             return '', False
         else:
             return '', True
-    if response.json().get('error'):
-        return response.json().get('error').get('error_msg'), True
+    if response_json.get('error'):
+        return response_json.get('error').get('error_msg'), True
 
 
 def count_clicks(token, link):
@@ -35,10 +36,11 @@ def count_clicks(token, link):
     url = 'https://api.vk.ru/method/utils.getLinkStats'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    if response.json().get('response'):
-        return '', response.json().get('response').get('stats')[0].get('views')
-    elif response.json().get('error'):
-        return response.json().get('error').get('error_msg'), 0
+    response_json = response.json()
+    if response_json.get('response'):
+        return '', response_json.get('response').get('stats')[0].get('views')
+    elif response_json.get('error'):
+        return response_json.get('error').get('error_msg'), 0
 
 
 def shorten_link(token, link):
@@ -51,17 +53,17 @@ def shorten_link(token, link):
     url = 'https://api.vk.ru/method/utils.getShortLink'
     response = requests.get(url, params=params)
     response.raise_for_status()
-    if response.json().get('response'):
-        return '', response.json().get('response').get('short_url')
-    elif response.json().get('error'):
-        return response.json().get('error').get('error_msg'), ''
+    response_json = response.json()
+    if response_json.get('response'):
+        return '', response_json.get('response').get('short_url')
+    elif response_json.get('error'):
+        return response_json.get('error').get('error_msg'), ''
 
 
 def main():
     load_dotenv()
     service_token = os.environ['VK_SERVICE_TOKEN']
     link = input('Please input the link: ')
-    # url = 'https://dvmn.org/modules/web-api/lesson/vk-short-link/'
     short_link = ''
     clicks_cnt = 0
     try:
