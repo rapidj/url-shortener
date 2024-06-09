@@ -2,6 +2,7 @@ import requests
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 import os
+import argparse
 
 
 def is_shorten_link(token, link):
@@ -36,8 +37,9 @@ def count_clicks(token, link):
     url = 'https://api.vk.ru/method/utils.getLinkStats'
     response = requests.get(url, params=params)
     response.raise_for_status()
+
     api_data = response.json()
-    if api_data.get('response'):
+    if api_data.get('response').get('stats'):
         return '', api_data.get('response').get('stats')[0].get('views')
     elif api_data.get('error'):
         return api_data.get('error').get('error_msg'), 0
@@ -53,6 +55,7 @@ def shorten_link(token, link):
     url = 'https://api.vk.ru/method/utils.getShortLink'
     response = requests.get(url, params=params)
     response.raise_for_status()
+
     api_data = response.json()
     if api_data.get('response'):
         return '', api_data.get('response').get('short_url')
@@ -63,9 +66,15 @@ def shorten_link(token, link):
 def main():
     load_dotenv()
     service_token = os.environ['VK_SERVICE_TOKEN']
-    link = input('Please input the link: ')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("link")
+    args = parser.parse_args()
+    link = args.link
+
     short_link = ''
     clicks_cnt = 0
+
     try:
         err_msg, is_short_link = is_shorten_link(service_token, link)
         if not err_msg and not is_short_link:
@@ -74,6 +83,9 @@ def main():
             err_msg, clicks_cnt = count_clicks(service_token, link)
     except requests.exceptions.HTTPError as e:
         print(f'Exception error: {e}')
+        return
+    except TypeError as e:
+        print(f'Error: {e}')
         return
 
     if err_msg:
